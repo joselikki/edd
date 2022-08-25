@@ -1,21 +1,18 @@
-import os
 from buff import BufferOut
-
-COLS = os.get_terminal_size().columns
-ROWS = os.get_terminal_size().lines
+from editor import Editor
 
 def clean_screen():
     print("\x1b[2J", end="", flush=True)
     print("\x1b[H", end="", flush=True)
 
 
-def draw_rows(buff: BufferOut):
+def draw_rows(ed: Editor, buff: BufferOut):
 
-    for i in range(ROWS):
+    for i in range(ed.rows):
 
-        if(i == int(ROWS/2)):
-            wel_msg = "EDITOR VERSION 0.0.1"
-            padding = int((COLS - len(wel_msg))/2)
+        if(i == int(ed.rows/2)):
+            wel_msg = "EDD VERSION 0.0.1"
+            padding = int((ed.cols - len(wel_msg))/2)
             
             if padding:
                 buff.add("~")
@@ -32,18 +29,18 @@ def draw_rows(buff: BufferOut):
 
         buff.add("\x1b[K")
 
-        if i < (ROWS - 1):
+        if i < (ed.rows - 1):
             buff.add("\r\n")
             
-def refresh_screen():
+def refresh_screen(ed: Editor):
     buff = BufferOut()
     
     buff.add("\x1b[?25l")
     buff.add("\x1b[H")
 
-    draw_rows(buff)
+    draw_rows(ed, buff)
 
-    buff.add("\x1b[H")
+    buff.add(f"\x1b[{ed.cy + 1};{ed.cx + 1}H")
     buff.add("\x1b[?25h")
 
     print(buff.content, end="", flush=True)

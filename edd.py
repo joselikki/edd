@@ -1,8 +1,14 @@
 import sys
 import os
-from terminal import enable_raw_mode, disable_raw_mode, editor_read_key
+from editor import Editor
+from terminal import Terminal, editor_read_key
 from output import clean_screen, refresh_screen, draw_rows
 
+term = Terminal()
+
+ed = Editor()
+ed.rows = os.get_terminal_size().lines
+ed.cols = os.get_terminal_size().columns
 
 def ctrl_key(key: str) -> int:
     try:
@@ -11,7 +17,6 @@ def ctrl_key(key: str) -> int:
     except:
         return 0
 
-
 def editor_process_keypress():
     char = editor_read_key()
 
@@ -19,14 +24,11 @@ def editor_process_keypress():
         clean_screen()
         exit(0)
 
-
-
-
 def main():
-    enable_raw_mode()
+    term.enable_raw_mode()
     
     while(True):
-        refresh_screen()
+        refresh_screen(ed)
         editor_process_keypress()
 
 
@@ -34,4 +36,4 @@ if __name__ == '__main__':
     try:
         main()
     finally:
-        disable_raw_mode()
+        term.disable_raw_mode()

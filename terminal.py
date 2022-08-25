@@ -1,21 +1,28 @@
 import sys
 import termios
 
-STDIN_FD = sys.stdin.fileno()
-ORIG_TERMIOS = termios.tcgetattr(STDIN_FD)
 
-def disable_raw_mode():
-    termios.tcsetattr(STDIN_FD, termios.TCSAFLUSH, ORIG_TERMIOS)
+class Terminal:
+    STDIN_FD = sys.stdin.fileno()
 
-def enable_raw_mode():
-    raw_termios = ORIG_TERMIOS.copy()
-    raw_termios[0] &= ~(termios.BRKINT | termios.ICRNL | termios.INPCK | termios.ISTRIP | termios.IXON)
-    raw_termios[1] &= ~(termios.OPOST)
-    raw_termios[3] &= ~(termios.ECHO | termios.ICANON | termios.IEXTEN | termios.ISIG)
-    raw_termios[6][termios.VMIN] = 0
-    raw_termios[6][termios.VTIME] = 1
 
-    termios.tcsetattr(sys.stdin.fileno(), termios.TCSAFLUSH, raw_termios)
+    def __init__(self):
+        self._orig_settings = termios.tcgetattr(self.STDIN_FD)
+    
+    def enable_raw_mode(self):
+        raw_settings = self._orig_settings.copy()
+        raw_settings[0] &= ~(termios.BRKINT | termios.ICRNL | termios.INPCK | termios.ISTRIP | termios.IXON)
+        raw_settings[1] &= ~(termios.OPOST)
+        raw_settings[3] &= ~(termios.ECHO | termios.ICANON | termios.IEXTEN | termios.ISIG)
+        raw_settings[6][termios.VMIN] = 0
+        raw_settings[6][termios.VTIME] = 1
+
+        termios.tcsetattr(self.STDIN_FD, termios.TCSAFLUSH, raw_settings)
+
+    def disable_raw_mode(self):
+        termios.tcsetattr(self.STDIN_FD, termios.TCSAFLUSH, self._orig_settings)
+
+
 
 def editor_read_key():
     char =''
@@ -23,6 +30,4 @@ def editor_read_key():
         char = sys.stdin.read(1)
 
     return char
-
-    
     
