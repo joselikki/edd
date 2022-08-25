@@ -1,8 +1,19 @@
 import sys
-import termios
+import os
+from terminal import enable_raw_mode, disable_raw_mode, editor_read_key
 
-STDIN_FD = sys.stdin.fileno()
-ORIG_TERMIOS = termios.tcgetattr(STDIN_FD)
+COLS = os.get_terminal_size().columns
+ROWS = os.get_terminal_size().lines
+
+class BufferOut:
+
+    def __init__(self):
+       self.content = ''
+
+    def add(self, chars : str):
+        self.content = self.content + chars
+
+
 
 def ctrl_key(key: str) -> int:
     try:
@@ -11,34 +22,47 @@ def ctrl_key(key: str) -> int:
     except:
         return 0
 
-def disable_raw_mode():
-    termios.tcsetattr(STDIN_FD, termios.TCSAFLUSH, ORIG_TERMIOS)
+def clean_screen():
+    print("\x1b[2J", end="", flush=True)
+    print("\x1b[H", end="", flush=True)
 
-def enable_raw_mode():
+def editor_process_keypress():
+    char = editor_read_key()
 
-    raw_termios = ORIG_TERMIOS.copy()
-    raw_termios[0] &= ~(termios.BRKINT | termios.ICRNL | termios.INPCK | termios.ISTRIP | termios.IXON)
-    raw_termios[1] &= ~(termios.OPOST)
-    raw_termios[3] &= ~(termios.ECHO | termios.ICANON | termios.IEXTEN | termios.ISIG)
-    raw_termios[6][termios.VMIN] = 0
-    raw_termios[6][termios.VTIME] = 1
+    if ord(char) == ctrl_key('q'):
+        clean_screen()
+        exit(0)
 
-    termios.tcsetattr(sys.stdin.fileno(), termios.TCSAFLUSH, raw_termios)
 
+def draw_rows(buff: BufferOut):
+    for i in range(ROWS):
+        buff.add("~")
+        buff.add("\x1b[K")
+
+        if i < (ROWS - 1):
+            buff.add("\r\n")
+
+def editor_refresh_screen():
+    buff = BufferOut()
+    
+    buff.add("\x1b[?25l")
+    buff.add("\x1b[H")
+
+    draw_rows(buff)
+
+    buff.add("\x1b[H")
+    buff.add("\x1b[?25h")
+
+    print(buff.content, end="", flush=True)
+    
 
 def main():
     enable_raw_mode()
     
     while(True):
-        
-        try:        
-            char = sys.stdin.read(1)
-            if(ord(char) == ctrl_key("q")):
-                break
+        editor_refresh_screen()
+        editor_process_keypress()
 
-            print(char, "\r\n", end="")    
-        except:
-            print(0, "\r\n", end="")
 
 if __name__ == '__main__':
     try:
