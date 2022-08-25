@@ -22,12 +22,4 @@ class Terminal:
     def disable_raw_mode(self):
         termios.tcsetattr(self.STDIN_FD, termios.TCSAFLUSH, self._orig_settings)
 
-
-
-def editor_read_key():
-    char =''
-    while(char == ''):
-        char = sys.stdin.read(1)
-
-    return char
     
