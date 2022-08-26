@@ -17,13 +17,13 @@ def move_cursor(ed: Editor, key: str):
     if key == "ARROW_LEFT" and ed.cx != 0:
         ed.cx -= 1
     
-    elif key == "ARROW_RIGHT" and ed.cx != ed.cols - 1:
+    elif key == "ARROW_RIGHT" and ed.cx != ed.screen_cols - 1:
         ed.cx += 1
 
     elif key == "ARROW_UP" and ed.cy != 0:
         ed.cy -= 1
     
-    elif key == "ARROW_DOWN" and ed.cy != ed.rows - 1:
+    elif key == "ARROW_DOWN" and ed.cy != ed.screen_rows - 1:
         ed.cy += 1
     
     else:
