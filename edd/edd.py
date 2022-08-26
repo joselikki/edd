@@ -7,11 +7,11 @@ from control import handle_keypress
 
 def editor_open(ed: Editor, filename:str):
     f = open(filename, "r")
-    line = f.readline()
+    lines = f.readlines()
 
-    ed.row.size = len(line)
-    ed.row.chars = line.strip()
-    ed.num_rows = 1 
+    ed.row.size = len(lines)
+    ed.row.chars = lines
+    ed.num_rows = len(lines) 
     f.close()
 
 def main():
