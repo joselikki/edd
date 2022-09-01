@@ -5,34 +5,34 @@ from output import clean_screen, refresh_screen
 from control import handle_keypress
 
 
-def editor_open(ed: Editor, filename:str):
+def editor_open(editor: Editor, filename:str):
     f = open(filename, "r")
     lines = f.readlines()
 
-    ed.row.size = len(lines)
-    ed.row.chars = lines
-    ed.num_rows = len(lines) 
+    editor.row.size = len(lines)
+    editor.row.chars = lines
+    editor.num_rows = len(lines) 
     f.close()
 
 def main():
     
 
-    term = Terminal()
-    edd = Editor()
+    terminal = Terminal()
+    editor = Editor()
 
     try:
-        term.enable_raw_mode()
+        terminal.enable_raw_mode()
 
         if (len(sys.argv)> 1):
-            editor_open(edd, sys.argv[1])
+            editor_open(editor, sys.argv[1])
 
         while(True):
-            refresh_screen(edd)
-            handle_keypress(edd)
+            refresh_screen(editor)
+            handle_keypress(editor)
 
     finally:
         clean_screen()
-        term.disable_raw_mode()
+        terminal.disable_raw_mode()
 
 if __name__ == '__main__':
         main()

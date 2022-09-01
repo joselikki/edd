@@ -1,53 +1,55 @@
 from buff import BufferOut
 from editor import Editor
 
-def scroll(ed: Editor):
-    if ed.cy < ed.rowoff:
-        ed.rowoff = ed.cy
-    if ed.cy >= ed.rowoff + ed.screen_rows:
-        ed.rowoff = ed.rowoff + 1
 
-def draw_rows(ed: Editor, buff: BufferOut):
+def scroll(editor: Editor):
+
+    if editor.cy < editor.rowoff:
+        editor.rowoff = editor.cy
+
+    if editor.cy >= editor.rowoff + editor.screen_rows:
+        editor.rowoff = editor.cy - editor.screen_rows + 1
+
+
+def draw_rows(editor: Editor, buff: BufferOut):
     
-    for i in range(ed.screen_rows):
-        filerow = i + ed.rowoff
+    for i in range(editor.screen_rows):
+        filerow = i + editor.rowoff
 
-        if filerow >= ed.num_rows:
+        if filerow >= editor.num_rows:
 
             #editor welcome message
-            if(ed.num_rows == 0 and i == int(ed.screen_rows/2)):
-                padding = int((ed.screen_cols - len(ed.welcome_msg))/2)
+            if(editor.num_rows == 0 and i == int(editor.screen_rows/2)):
+                padding = int((editor.screen_cols - len(editor.welcome_msg))/2)
                 
                 if padding:
                     buff.add("~")
                     buff.add(" " * (padding - 1 ))
 
-                buff.add(ed.welcome_msg)
+                buff.add(editor.welcome_msg)
 
             else:
                 buff.add("~")
 
         else:
-            buff.add(ed.row.chars[filerow].rstrip('\n')) 
+            buff.add(editor.row.chars[filerow].rstrip('\n')) 
 
         buff.add("\x1b[K")
 
-        if i < (ed.screen_rows - 1):
+        if i < (editor.screen_rows - 1):
             buff.add("\r\n")
             
 
-
-
-def refresh_screen(ed: Editor):
+def refresh_screen(editor: Editor):
     buff = BufferOut()
-    scroll(ed)
+    scroll(editor)
 
     buff.add("\x1b[?25l")
     buff.add("\x1b[H")
 
-    draw_rows(ed, buff)
+    draw_rows(editor, buff)
 
-    buff.add(f"\x1b[{ed.cy - ed.rowoff + 1};{ed.cx + 1}H")
+    buff.add(f"\x1b[{editor.cy - editor.rowoff + 1};{editor.cx + 1}H")
     buff.add("\x1b[?25h")
 
     print(buff.content, end="", flush=True)
