@@ -1,5 +1,6 @@
 from buff import BufferOut
 from editor import Editor
+from statusbar import statusbar
 
 
 def scroll(editor: Editor):
@@ -35,9 +36,7 @@ def draw_rows(editor: Editor, buff: BufferOut):
             buff.add(editor.row.chars[filerow].rstrip('\n')) 
 
         buff.add("\x1b[K")
-
-        if i < (editor.screen_rows - 1):
-            buff.add("\r\n")
+        buff.add("\r\n")
             
 
 def refresh_screen(editor: Editor):
@@ -48,7 +47,8 @@ def refresh_screen(editor: Editor):
     buff.add("\x1b[H")
 
     draw_rows(editor, buff)
-
+    statusbar(editor, buff)
+    
     buff.add(f"\x1b[{editor.cy - editor.rowoff + 1};{editor.cx + 1}H")
     buff.add("\x1b[?25h")
 

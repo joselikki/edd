@@ -6,6 +6,7 @@ from control import handle_keypress
 
 
 def editor_open(editor: Editor, filename:str):
+    editor.filename = filename
     f = open(filename, "r")
     lines = f.readlines()
 
