@@ -13,6 +13,7 @@ class Editor:
         self.screen_cols = os.get_terminal_size().columns
         self.cx = 0
         self.cy = 0
+        self.rowoff = 0
         self.num_rows = 0 
         self.row = EditorRow() 
         self.welcome_msg = "EDD VERSION 0.0.1"

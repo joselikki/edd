@@ -1,12 +1,18 @@
 from buff import BufferOut
 from editor import Editor
 
+def scroll(ed: Editor):
+    if ed.cy < ed.rowoff:
+        ed.rowoff = ed.cy
+    if ed.cy >= ed.rowoff + ed.screen_rows:
+        ed.rowoff = ed.rowoff + 1
+
 def draw_rows(ed: Editor, buff: BufferOut):
     
-    total_rows = ed.total_rows()
-    for i in range(total_rows):
-        
-        if i >= ed.num_rows:
+    for i in range(ed.screen_rows):
+        filerow = i + ed.rowoff
+
+        if filerow >= ed.num_rows:
 
             #editor welcome message
             if(ed.num_rows == 0 and i == int(ed.screen_rows/2)):
@@ -22,10 +28,7 @@ def draw_rows(ed: Editor, buff: BufferOut):
                 buff.add("~")
 
         else:
-            try:
-                buff.add(ed.row.chars[i].rstrip('\n')) 
-            except IndexError:
-                pass
+            buff.add(ed.row.chars[filerow].rstrip('\n')) 
 
         buff.add("\x1b[K")
 
@@ -37,13 +40,14 @@ def draw_rows(ed: Editor, buff: BufferOut):
 
 def refresh_screen(ed: Editor):
     buff = BufferOut()
-    
+    scroll(ed)
+
     buff.add("\x1b[?25l")
     buff.add("\x1b[H")
 
     draw_rows(ed, buff)
 
-    buff.add(f"\x1b[{ed.cy + 1};{ed.cx + 1}H")
+    buff.add(f"\x1b[{ed.cy - ed.rowoff + 1};{ed.cx + 1}H")
     buff.add("\x1b[?25h")
 
     print(buff.content, end="", flush=True)

@@ -13,7 +13,7 @@ def ctrl_key(key: str) -> int:
 
 
 def move_cursor(ed: Editor, key: str):
-    
+
     if key == "ARROW_LEFT" and ed.cx != 0:
         ed.cx -= 1
     
@@ -23,7 +23,7 @@ def move_cursor(ed: Editor, key: str):
     elif key == "ARROW_UP" and ed.cy != 0:
         ed.cy -= 1
     
-    elif key == "ARROW_DOWN" and ed.cy != ed.screen_rows - 1:
+    elif key == "ARROW_DOWN" and ed.cy < ed.num_rows :
         ed.cy += 1
     
     else:
