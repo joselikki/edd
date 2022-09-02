@@ -1,4 +1,4 @@
-from buff import BufferOut
+from buffer import Buffer
 from editor import Editor
 from statusbar import statusbar
 
@@ -12,7 +12,7 @@ def scroll(editor: Editor):
         editor.rowoff = editor.cy - editor.screen_rows + 1
 
 
-def draw_rows(editor: Editor, buff: BufferOut):
+def draw_rows(editor: Editor, buffer: Buffer):
     
     for i in range(editor.screen_rows):
         filerow = i + editor.rowoff
@@ -24,35 +24,35 @@ def draw_rows(editor: Editor, buff: BufferOut):
                 padding = int((editor.screen_cols - len(editor.welcome_msg))/2)
                 
                 if padding:
-                    buff.add("~")
-                    buff.add(" " * (padding - 1 ))
+                    buffer.add("~")
+                    buffer.add(" " * (padding - 1 ))
 
-                buff.add(editor.welcome_msg)
+                buffer.add(editor.welcome_msg)
 
             else:
-                buff.add("~")
+                buffer.add("~")
 
         else:
-            buff.add(editor.row.chars[filerow].rstrip('\n')) 
+            buffer.add(editor.row.chars[filerow].rstrip('\n')) 
 
-        buff.add("\x1b[K")
-        buff.add("\r\n")
+        buffer.add("\x1b[K")
+        buffer.add("\r\n")
             
 
 def refresh_screen(editor: Editor):
-    buff = BufferOut()
+    buffer = Buffer()
     scroll(editor)
 
-    buff.add("\x1b[?25l")
-    buff.add("\x1b[H")
+    buffer.add("\x1b[?25l")
+    buffer.add("\x1b[H")
 
-    draw_rows(editor, buff)
-    statusbar(editor, buff)
+    draw_rows(editor, buffer)
+    statusbar(editor, buffer)
     
-    buff.add(f"\x1b[{editor.cy - editor.rowoff + 1};{editor.cx + 1}H")
-    buff.add("\x1b[?25h")
+    buffer.add(f"\x1b[{editor.cy - editor.rowoff + 1};{editor.cx + 1}H")
+    buffer.add("\x1b[?25h")
 
-    print(buff.content, end="", flush=True)
+    print(buffer.content, end="", flush=True)
     
 
 def clean_screen():

@@ -1,5 +1,5 @@
 
-class BufferOut:
+class Buffer:
 
     def __init__(self):
        self.content = ''
