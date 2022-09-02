@@ -15,8 +15,16 @@ class Editor:
         self.cy = 0
         self.rowoff = 0
         self.num_rows = 0 
-        self.row = EditorRow() 
+        self.rows = EditorRow() 
         self.welcome_msg = "EDD VERSION 0.0.1"
         self.filename = "[NEW FILE]"
 
+    def open_file(self, filename:str):
+        self.filename = filename
+
+        f = open(filename, "r")
+        lines = f.readlines()
+        self.rows.chars = lines
+        self.num_rows = len(lines)
+        f.close()
 

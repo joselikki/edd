@@ -12,28 +12,35 @@ def scroll(editor: Editor):
         editor.rowoff = editor.cy - editor.screen_rows + 1
 
 
-def draw_rows(editor: Editor, buffer: Buffer):
+
+def show_default_msg(editor: Editor, buffer: Buffer):
+    
+    padding = int((editor.screen_cols - len(editor.welcome_msg))/2)
+    
+    if padding:
+        buffer.add("~")
+        buffer.add(" " * (padding - 1 ))
+
+    buffer.add(editor.welcome_msg)
+
+
+
+def render_rows(editor: Editor, buffer: Buffer):
     
     for i in range(editor.screen_rows):
         filerow = i + editor.rowoff
 
         if filerow >= editor.num_rows:
 
-            #editor welcome message
             if(editor.num_rows == 0 and i == int(editor.screen_rows/2)):
-                padding = int((editor.screen_cols - len(editor.welcome_msg))/2)
-                
-                if padding:
-                    buffer.add("~")
-                    buffer.add(" " * (padding - 1 ))
-
-                buffer.add(editor.welcome_msg)
+                show_default_msg(editor, buffer)
 
             else:
                 buffer.add("~")
 
         else:
-            buffer.add(editor.row.chars[filerow].rstrip('\n')) 
+            buffer.add( editor.rows.chars[filerow].rstrip('\n') ) 
+
 
         buffer.add("\x1b[K")
         buffer.add("\r\n")
@@ -46,7 +53,7 @@ def refresh_screen(editor: Editor):
     buffer.add("\x1b[?25l")
     buffer.add("\x1b[H")
 
-    draw_rows(editor, buffer)
+    render_rows(editor, buffer)
     statusbar(editor, buffer)
     
     buffer.add(f"\x1b[{editor.cy - editor.rowoff + 1};{editor.cx + 1}H")

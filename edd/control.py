@@ -1,5 +1,4 @@
 from editor import Editor
-from output import clean_screen
 from key import read_key
 
 
@@ -40,7 +39,6 @@ def handle_keypress(editor: Editor):
 
     try:
         if ord(char) == ctrl_key('q'):
-            clean_screen()
             exit(0)
 
     except TypeError:
