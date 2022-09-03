@@ -6,4 +6,4 @@ class Buffer:
 
     def add(self, chars : str):
         self.content = self.content + chars
-
+    

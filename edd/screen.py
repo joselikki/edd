@@ -13,15 +13,15 @@ def scroll(editor: Editor):
 
 
 
-def show_default_msg(editor: Editor, buffer: Buffer):
+def show_default_msg(cols: int, msg: str, buffer: Buffer) -> None:
     
-    padding = int((editor.screen_cols - len(editor.welcome_msg))/2)
+    padding = int((cols - len(msg))/2)
     
     if padding:
         buffer.add("~")
         buffer.add(" " * (padding - 1 ))
 
-    buffer.add(editor.welcome_msg)
+    buffer.add(msg)
 
 
 
@@ -33,7 +33,7 @@ def render_rows(editor: Editor, buffer: Buffer):
         if filerow >= editor.num_rows:
 
             if(editor.num_rows == 0 and i == int(editor.screen_rows/2)):
-                show_default_msg(editor, buffer)
+                show_default_msg(editor.screen_cols, editor.welcome_msg, buffer)
 
             else:
                 buffer.add("~")
@@ -54,7 +54,7 @@ def refresh_screen(editor: Editor):
     buffer.add("\x1b[H")
 
     render_rows(editor, buffer)
-    statusbar(editor, buffer)
+    statusbar(editor.screen_cols, editor.filename, editor.cy, editor.cx,  buffer)
     
     buffer.add(f"\x1b[{editor.cy - editor.rowoff + 1};{editor.cx + 1}H")
     buffer.add("\x1b[?25h")

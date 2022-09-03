@@ -1,18 +1,17 @@
-from editor import Editor
 from buffer import Buffer
 
-def statusbar(editor: Editor, buffer: Buffer):
+def statusbar(cols: int, filename: str, pos_y: int, pos_x: int , buffer: Buffer) -> None:
     
     buffer.add("\x1b[7m")
-    bar_len = len(editor.filename)
+    bar_len = len(filename)
     
-    buffer.add(editor.filename)
-    while (bar_len < editor.screen_cols):
-        msg = f"{editor.cy + 1},{editor.cx + 1}"
+    buffer.add(filename)
+    while (bar_len < cols):
+        cur_pos = f"{pos_y + 1},{pos_x + 1}"
 
-        if bar_len == int(editor.screen_cols / 2) - len(msg):
-            buffer.add(msg)
-            bar_len += len(msg)
+        if bar_len == int(cols / 2) - len(cur_pos):
+            buffer.add(cur_pos)
+            bar_len += len(cur_pos)
 
         else:
             buffer.add(" ")
