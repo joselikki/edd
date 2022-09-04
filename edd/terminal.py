@@ -6,10 +6,10 @@ class Terminal:
     STDIN_FD = sys.stdin.fileno()
 
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._orig_settings = termios.tcgetattr(self.STDIN_FD)
     
-    def enable_raw_mode(self):
+    def enable_raw_mode(self) -> None:
         raw_settings = self._orig_settings.copy()
         raw_settings[0] &= ~(termios.BRKINT | termios.ICRNL | termios.INPCK | termios.ISTRIP | termios.IXON)
         raw_settings[1] &= ~(termios.OPOST)
@@ -19,7 +19,7 @@ class Terminal:
 
         termios.tcsetattr(self.STDIN_FD, termios.TCSAFLUSH, raw_settings)
 
-    def disable_raw_mode(self):
+    def disable_raw_mode(self) -> None:
         termios.tcsetattr(self.STDIN_FD, termios.TCSAFLUSH, self._orig_settings)
 
     

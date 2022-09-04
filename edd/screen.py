@@ -3,7 +3,7 @@ from editor import Editor
 from statusbar import statusbar
 
 
-def scroll(editor: Editor):
+def scroll(editor: Editor) -> None:
 
     if editor.cy < editor.rowoff:
         editor.rowoff = editor.cy
@@ -25,7 +25,7 @@ def show_default_msg(cols: int, msg: str, buffer: Buffer) -> None:
 
 
 
-def render_rows(editor: Editor, buffer: Buffer):
+def render_rows(editor: Editor, buffer: Buffer) -> None:
     
     for i in range(editor.screen_rows):
         filerow = i + editor.rowoff
@@ -46,7 +46,7 @@ def render_rows(editor: Editor, buffer: Buffer):
         buffer.add("\r\n")
             
 
-def refresh_screen(editor: Editor):
+def refresh_screen(editor: Editor) -> None:
     buffer = Buffer()
     scroll(editor)
 
@@ -62,6 +62,6 @@ def refresh_screen(editor: Editor):
     print(buffer.content, end="", flush=True)
     
 
-def clean_screen():
+def clean_screen() -> None:
     print("\x1b[2J", end="", flush=True)
     print("\x1b[H", end="", flush=True)
