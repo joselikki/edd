@@ -11,21 +11,15 @@ class Row:
 class EditorRows:
 
     def __init__(self) -> None:
-        self.size = 0
         self.rows = []
 
     def add_row(self, row: Row) -> None:
         self.rows.append(row)
 
-    @property
-    def chars(self) -> str:
-        content = []
+    def get_row(self, index:int) -> str:
         
-        for row in self.rows:
-            content.append(row.chars)
-
-        return content
-
+        if index <= len(self.rows):
+            return self.rows[index].chars
         
 class Editor:
     

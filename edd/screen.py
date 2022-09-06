@@ -38,7 +38,8 @@ def render_rows(editor: Editor, buffer: Buffer):
                 buffer.add("~")
 
         else:
-            buffer.add( editor.rows.chars[filerow].rstrip('\n') ) 
+            row = editor.rows.get_row(filerow)
+            buffer.add( row.rstrip('\n') ) 
 
 
         buffer.add("\x1b[K")
