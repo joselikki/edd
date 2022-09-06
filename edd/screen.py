@@ -12,7 +12,6 @@ def scroll(editor: Editor):
         editor.rowoff = editor.cy - editor.screen_rows + 1
 
 
-
 def show_default_msg(cols: int, msg: str, buffer: Buffer) -> None:
     
     padding = int((cols - len(msg))/2)

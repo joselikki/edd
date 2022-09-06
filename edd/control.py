@@ -22,7 +22,7 @@ def move_cursor(editor: Editor, key: str):
     elif key == "ARROW_UP" and editor.cy != 0:
         editor.cy -= 1
     
-    elif key == "ARROW_DOWN" and editor.cy < editor.num_rows :
+    elif key == "ARROW_DOWN" and editor.cy < editor.num_rows - 1:
         editor.cy += 1
     
     else:
