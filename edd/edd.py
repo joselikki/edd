@@ -1,12 +1,11 @@
 import sys
 from editor import Editor
-from terminal import Terminal 
+from terminal import Terminal
 from screen import clean_screen, refresh_screen
 from control import handle_keypress
 
 
 def main():
-    
 
     terminal = Terminal()
     editor = Editor()
